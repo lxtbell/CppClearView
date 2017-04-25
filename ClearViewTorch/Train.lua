@@ -64,12 +64,18 @@ function makeNetwork(params)
 end
 
 -- Build a LeNet convolutional neural network based on a set of parameters
-function train(trainData, networkParams, alpha, iterations)
+function train(trainData, networkParams, alpha, iterations, isClassification)
     -- Build a convolutional neural network
     local net = makeNetwork(networkParams)
 
-    -- Set up a log-likelihood classification loss
-    local criterion = nn.ClassNLLCriterion()
+    local criterion
+    if isClassification then
+        -- Set up a log-likelihood classification loss
+        criterion = nn.ClassNLLCriterion()
+    else
+        -- Set up a Mean Square Error loss
+        criterion = nn.MSECriterion()
+    end
 
     local trainer = nn.StochasticGradient(net, criterion)
     trainer.learningRate = alpha
@@ -81,6 +87,7 @@ function train(trainData, networkParams, alpha, iterations)
     return net
 end
 
+-- Evaluate the performance of network on testing data
 function evaluate(testData, net)
     local correct = 0
     local dataLength = testData.data:size(1)
@@ -98,6 +105,35 @@ function evaluate(testData, net)
     return correct / dataLength
 end
 
+
+
+-- Return the index of the maximum value in an array
+function argmax(vector)
+    local maxValue = math.max(unpack(vector))
+
+    for i = 1, #vector do
+        if vector[i] == maxValue then
+            return i
+        end
+    end
+end
+
+-- Find the best performing parameter set based on the network trained after some iterations
+function parameterTuning(trainData, testData, paramSet, iterations, isClassification)
+    local accuracies = {}
+
+    for i = 1, #paramSet do
+        local net = train(trainData, paramSet[i].networkParams, paramSet[i].alpha, iterations, isClassification)
+        local accuracy = evaluate(testData, net)
+
+        print(paramSet[i], accuracy)
+        table.insert(accuracies, accuracy)
+    end
+
+    local bestIndex = argmax(accuracies)
+    return paramSet[bestIndex], accuracies[bestIndex]
+end
+
 function main()
 	local trainset = torch.load('data/tensors/binaryTrain.t7')
 	local testset = torch.load('data/tensors/binaryTest.t7')
@@ -111,20 +147,30 @@ function main()
 	local trainData = prepare(trainset)
 	local testData = prepare(testset)
 
-	-- Build a convolutional neural network
-	local net = train(trainData, {
-        input = 200,
-        outputA = 6,
-        kernelA = 21,
-        maxPoolA = 3,
-        outputB = 16,
-        kernelB = 21,
-        maxPoolB = 4,
-        fullyA = 120,
-        fullyB = 84,
-        finalOutput = 2
-    }, 0.01, 1)
+    -- Find the best performing parameter set
+    local bestParams, bestAccuracy = parameterTuning(trainData, testData, {
+        {
+            networkParams = {
+                input = 200,
+                outputA = 6,
+                kernelA = 21,
+                maxPoolA = 3,
+                outputB = 16,
+                kernelB = 21,
+                maxPoolB = 4,
+                fullyA = 120,
+                fullyB = 84,
+                finalOutput = 2
+            },
+            alpha = 0.01
+        }
+    }, 1, true)
 
+	-- Build a convolutional neural network based on the parameter set
+	local net = train(trainData, bestParams.networkParams, bestParams.alpha, 2, true)
+    print()
+
+    -- Evaluate the performance of network on testing data
     local accuracy = evaluate(testData, net)
     print(accuracy)
 	

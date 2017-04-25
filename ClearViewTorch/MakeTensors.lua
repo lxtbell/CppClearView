@@ -3,20 +3,23 @@ torch.setdefaulttensortype('torch.FloatTensor')
 
 -- Return a list of all files in a folder
 function scanFolder(folder)
-    local fileList, popen = {}, io.popen
-    local pfile = popen('ls -a "'..folder..'"')  -- Execute ls to fetch the file list
+    local fileList = {}
+
+    local pfile = io.popen('ls -a "'..folder..'"')  -- Execute ls to fetch the file list
     for file in pfile:lines() do
 		if file ~= '.' and file ~= '..' then
 			table.insert(fileList, file)
 		end
     end
     pfile:close()
+    
     return fileList
 end
 
 -- Convert all n images in a folder to a tensor of dimension n*3*w*h
 function getDataset(folder, filter)
 	local dataset = torch.Tensor()
+
 	for i, file in ipairs(scanFolder(folder)) do
 		if filter(i, file) then
 			local img = image.load(folder..'/'..file)
@@ -24,6 +27,7 @@ function getDataset(folder, filter)
 			dataset = torch.cat(dataset, data, 1)
 		end
 	end
+
 	return dataset
 end
 
