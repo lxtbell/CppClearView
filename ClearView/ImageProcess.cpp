@@ -24,4 +24,8 @@ namespace ImageProcess {
 		float beta = 0.3f;
 		return transmissionImage.deblend(reflectionImage, 1 - beta, beta, 0);
 	}
+
+	OpenCVImage removeReflection(const OpenCVImage &transmission) {
+		return transmission.blend(transmission, 0.5, 0, 0);
+	}
 }

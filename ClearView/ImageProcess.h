@@ -14,4 +14,9 @@ namespace ImageProcess {
 	 @brief Remove the reflection from an image based on a reflection image
 	 */
 	UNITTEST_EXPORT OpenCVImage removeReflection(const OpenCVImage &transmission, const OpenCVImage &reflection);
+
+	/*!
+	@brief Remove the reflection from an image
+	*/
+	UNITTEST_EXPORT OpenCVImage removeReflection(const OpenCVImage &transmission);
 }
