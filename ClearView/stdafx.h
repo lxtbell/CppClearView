@@ -22,6 +22,7 @@
 #include <tchar.h>
 
 #include <experimental/generator>
+#include <direct.h>
 
 #include "dirent.h"
 #endif
