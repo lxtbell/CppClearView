@@ -9,13 +9,18 @@ OpenCVKernel::OpenCVKernel(int width, int height) {
 	anchor = cv::Point(width, height);
 }
 
-void OpenCVKernel::setGhosting(int dx, int dy, float ck) {
-	mat.at<float>(anchor.x, anchor.y) = 1 - ck;
-	mat.at<float>(anchor.x + dx, anchor.y + dy) = ck;
-}
-
 OpenCVImage OpenCVKernel::applyTo(const OpenCVImage &image) {
 	cv::Mat filteredImage;
 	cv::filter2D(image.mat, filteredImage, -1, mat, anchor);  // ddepth = -1 so that the output image will have the same depth as the source
 	return OpenCVImage(move(filteredImage));
+}
+
+
+void OpenCVKernel::setGhosting(int dx, int dy, float ck) {
+	mat.at<float>(anchor.y, anchor.x) = 1 - ck;
+	mat.at<float>(anchor.y + dy, anchor.x + dx) = ck;
+}
+
+void OpenCVKernel::setShifting(int dx, int dy) {
+	mat.at<float>(anchor.y + dy, anchor.x + dx) = 1;
 }

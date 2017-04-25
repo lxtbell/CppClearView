@@ -31,6 +31,11 @@ struct UNITTEST_EXPORT OpenCVImage {
      @brief Return the containing cv::Mat
      */
 	cv::Mat getMat() const;
+
+	/*!
+	 @brief Display the image in a new window
+	 */
+	void display(const std::string &windowTitle) const;
     
     /*!
      @brief Return the height and width of the image

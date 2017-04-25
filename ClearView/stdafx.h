@@ -12,6 +12,7 @@
 // TODO: reference additional headers your program requires here
 #include <iostream>
 #include <random>
+#include <algorithm>
 
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>

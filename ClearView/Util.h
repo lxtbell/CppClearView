@@ -36,6 +36,14 @@ struct Util {
 		return dist(randomEngine);
 	}
 
+	/*!
+	 @brief If v compares less than hi, returns the larger of v and lo, otherwise returns the smaller of v and hi
+	 */
+	template <typename T>
+	static T clamp(const T &v, const T &lo, const T &hi) {
+		return max(lo, min(v, hi));
+	}
+
 protected:
 	static std::random_device randomDevice;
 	static std::mt19937 randomEngine;

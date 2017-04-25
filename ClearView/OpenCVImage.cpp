@@ -7,7 +7,7 @@ OpenCVImage::OpenCVImage(const string &from) {
 	mat = cv::imread(from);
 }
 
-void OpenCVImage::saveToPath(const std::string &to) const {
+void OpenCVImage::saveToPath(const string &to) const {
     cv::imwrite(to, mat);
 }
 
@@ -16,6 +16,12 @@ OpenCVImage::OpenCVImage(cv::Mat &&mat) : mat { move(mat) } {}
 
 cv::Mat OpenCVImage::getMat() const {
     return mat;
+}
+
+void OpenCVImage::display(const string &windowTitle) const {
+	cv::namedWindow(windowTitle, cv::WINDOW_AUTOSIZE);
+	cv::imshow(windowTitle, mat);
+	cv::waitKey(0);
 }
 
 int OpenCVImage::getHeight() const {

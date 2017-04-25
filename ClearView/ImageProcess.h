@@ -11,6 +11,11 @@ namespace ImageProcess {
 	UNITTEST_EXPORT OpenCVImage forgeReflection(const OpenCVImage &transmission, const OpenCVImage &reflection, bool ghosting);
 
 	/*!
+	 @brief Synthesize a series of images with reflection simulating image taken from multiple perspective
+	 */
+	UNITTEST_EXPORT std::vector<OpenCVImage> forgeReflectionSeries(const OpenCVImage &transmission, const OpenCVImage &reflection, int count);
+
+	/*!
 	 @brief Remove the reflection from an image based on a reflection image
 	 */
 	UNITTEST_EXPORT OpenCVImage removeReflection(const OpenCVImage &transmission, const OpenCVImage &reflection);
