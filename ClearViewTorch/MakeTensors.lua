@@ -1,9 +1,10 @@
 require 'image'
 torch.setdefaulttensortype('torch.FloatTensor')
 
+-- Return a list of all files in a folder
 function scanFolder(folder)
     local fileList, popen = {}, io.popen
-    local pfile = popen('ls -a "'..folder..'"')
+    local pfile = popen('ls -a "'..folder..'"')  -- Execute ls to fetch the file list
     for file in pfile:lines() do
 		if file ~= '.' and file ~= '..' then
 			table.insert(fileList, file)
@@ -13,6 +14,7 @@ function scanFolder(folder)
     return fileList
 end
 
+-- Convert all n images in a folder to a tensor of dimension n*3*w*h
 function getDataset(folder, filter)
 	local dataset = torch.Tensor()
 	for i, file in ipairs(scanFolder(folder)) do
@@ -26,6 +28,8 @@ function getDataset(folder, filter)
 end
 
 function main()
+    -- Load images with and without reflections
+    -- Select a random half of images with reflections and the other half without reflections
 	local merged = getDataset('data/normalized/merged', function(i, file)
 		return string.byte(file:sub(1, 1)) % 2 == 0
 	end)
@@ -33,10 +37,12 @@ function main()
 		return string.byte(file:sub(1, 1)) % 2 == 1
 	end)
 
+    -- Concatenate the two tensors
 	local dataset = torch.cat(merged, transmissions, 1)
 	local labels = torch.cat(torch.Tensor(merged:size(1)):fill(1), torch.Tensor(transmissions:size(1)):fill(2))
 	local datasetLength = dataset:size(1)
 
+    -- Shuffle the data entry order
 	local shuffle = torch.randperm(datasetLength)
 	local datasetShuffled, labelsShuffled = torch.Tensor(), torch.Tensor()
 	for i = 1, datasetLength do
@@ -48,6 +54,7 @@ function main()
 		labelsShuffled = torch.cat(labelsShuffled, label, 1)
 	end
 
+    -- Take the first fifth of the data as the testing data, and the remaining as the training data
 	testLength = datasetLength / 5
 	torch.save('data/tensors/binaryTrain.t7', {
 		data = datasetShuffled[{ {testLength + 1, datasetLength}, {}, {}, {} }], 

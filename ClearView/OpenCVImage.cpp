@@ -7,50 +7,30 @@ OpenCVImage::OpenCVImage(const string &from) {
 	mat = cv::imread(from);
 }
 
-void OpenCVImage::saveToPath(const std::string &to) {
-	cv::imwrite(to, mat);
+void OpenCVImage::saveToPath(const std::string &to) const {
+    cv::imwrite(to, mat);
 }
 
-void OpenCVImage::scale(float ratio) {
-	cv::Mat scaledImage;
-	cv::resize(mat, scaledImage, cv::Size(), ratio, ratio);
-	mat = move(scaledImage);
+OpenCVImage::OpenCVImage(const cv::Mat &mat) : mat { mat } {}
+OpenCVImage::OpenCVImage(cv::Mat &&mat) : mat { move(mat) } {}
+
+cv::Mat OpenCVImage::getMat() const {
+    return mat;
 }
 
-void OpenCVImage::scaleTo(int width, int height) {
-	cv::Mat scaledImage;
-	cv::resize(mat, scaledImage, cv::Size(width, height));
-	mat = move(scaledImage);
+int OpenCVImage::getHeight() const {
+	return mat.rows;
 }
 
-void OpenCVImage::normalize(int normalizedLength) {
-	// Crop the longer side
-	int currentLength = min(mat.rows, mat.cols);
-	cv::Rect croppedArea((mat.cols - currentLength) / 2, (mat.rows - currentLength) / 2, currentLength, currentLength);
-	cv::Mat croppedImage(mat, croppedArea);
-	mat = move(croppedImage);
-
-	scaleTo(normalizedLength, normalizedLength);
+int OpenCVImage::getWidth() const {
+	return mat.cols;
 }
 
-void OpenCVImage::blend(const OpenCVImage &other, float alpha, float beta, float gamma) {
-	cv::Mat mergedImage;
-	cv::addWeighted(mat, alpha, other.mat, beta, 0, mergedImage);
-	mat = move(mergedImage);
-}
-
-void OpenCVImage::deblend(const OpenCVImage &other, float alpha, float beta, float gamma) {
-	if (alpha == 0)
-		return;
-	// result = current / alpha - beta / alpha * other - gamma / alpha
-	blend(other, 1 / alpha, -beta / alpha, -gamma / alpha);
-}
-
-float OpenCVImage::getNorm(int normType) {
+double OpenCVImage::getNorm(int normType) const {
 	return cv::norm(mat, normType);
 }
 
-OpenCVImage OpenCVImage::getGradient() {
+OpenCVImage OpenCVImage::getGradient() const {
 	// Convert the image to greyscale
 	cv::Mat greyImage;
 	cv::cvtColor(mat, greyImage, CV_BGR2GRAY);
@@ -68,5 +48,39 @@ OpenCVImage OpenCVImage::getGradient() {
 	// Sum up gradients in x and y directions
 	cv::Mat gradiant;
 	cv::addWeighted(absGradientX, 0.5, absGradientY, 0.5, 0, gradiant);
-	return OpenCVImage(gradiant);
+	return OpenCVImage(move(gradiant));
+}
+
+OpenCVImage OpenCVImage::scale(float ratio) const {
+	cv::Mat scaledImage;
+	cv::resize(mat, scaledImage, cv::Size(), ratio, ratio);
+	return OpenCVImage(move(scaledImage));
+}
+
+OpenCVImage OpenCVImage::scaleTo(int width, int height) const {
+	cv::Mat scaledImage;
+	cv::resize(mat, scaledImage, cv::Size(width, height));
+	return OpenCVImage(move(scaledImage));
+}
+
+OpenCVImage OpenCVImage::normalize(int normalizedLength) const {
+	// Crop the longer side
+	int currentLength = min(mat.rows, mat.cols);
+	cv::Rect croppedArea((mat.cols - currentLength) / 2, (mat.rows - currentLength) / 2, currentLength, currentLength);
+	cv::Mat croppedImage(mat, croppedArea);
+
+	return OpenCVImage(move(croppedImage)).scaleTo(normalizedLength, normalizedLength);
+}
+
+OpenCVImage OpenCVImage::blend(const OpenCVImage &other, float alpha, float beta, float gamma) const {
+	cv::Mat mergedImage;
+	cv::addWeighted(mat, alpha, other.mat, beta, gamma, mergedImage);
+	return OpenCVImage(move(mergedImage));
+}
+
+OpenCVImage OpenCVImage::deblend(const OpenCVImage &other, float alpha, float beta, float gamma) const {
+	if (alpha == 0) return other;
+
+	// result = current / alpha - beta / alpha * other - gamma / alpha
+	return blend(other, 1 / alpha, -beta / alpha, -gamma / alpha);
 }

@@ -17,12 +17,12 @@ struct OpenCVKernel {
 	             k[dx][dy] = ck
 	             See Y. Shih, D. Krishnan, F. Durand, and W. Freeman. Reflection removal using ghosting cues. In Computer Vision and Pattern Recognition(CVPR), 2015 IEEE Conference on, pages 3193¨C3201, June 2015.
 	 */
-	void setGhosting(float dx, float dy, float ck);
+	void setGhosting(int dx, int dy, float ck);
 
 	/*!
 	 @brief Apply the kernel to an image
 	 */
-	void applyTo(OpenCVImage &image);
+	OpenCVImage applyTo(const OpenCVImage &image);
 
 protected:
 	cv::Mat mat;

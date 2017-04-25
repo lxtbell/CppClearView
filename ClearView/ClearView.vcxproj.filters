@@ -19,14 +19,17 @@
     <Filter Include="Source Files\Environment">
       <UniqueIdentifier>{afdfcb25-4b13-4649-b6dc-242a039a9c72}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Library">
+      <UniqueIdentifier>{814a536c-1ed3-40d2-b9b5-779d16c319e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Library">
+      <UniqueIdentifier>{33b2ed4e-7a4b-426a-ac1f-475215ee71e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="OpenCVImage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -39,30 +42,42 @@
     <ClInclude Include="dirent.h">
       <Filter>Header Files\Environment</Filter>
     </ClInclude>
-    <ClInclude Include="OpenCVKernel.h">
+    <ClInclude Include="ImageTasks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="OpenCVKernel.h">
+      <Filter>Header Files\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenCVImage.h">
+      <Filter>Header Files\Library</Filter>
+    </ClInclude>
     <ClInclude Include="ImageProcess.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="TestExport.h">
+      <Filter>Header Files\Environment</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ClearView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OpenCVImage.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files\Environment</Filter>
     </ClCompile>
     <ClCompile Include="Util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files\Environment</Filter>
-    </ClCompile>
-    <ClCompile Include="OpenCVKernel.cpp">
+    <ClCompile Include="ImageTasks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ImageProcess.cpp">
+      <Filter>Source Files\Library</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenCVImage.cpp">
+      <Filter>Source Files\Library</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenCVKernel.cpp">
+      <Filter>Source Files\Library</Filter>
+    </ClCompile>
+    <ClCompile Include="ClearView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
