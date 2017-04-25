@@ -8,11 +8,9 @@
 #include "targetver.h"
 
 #include <stdio.h>
-#include <tchar.h>
 
 // TODO: reference additional headers your program requires here
 #include <iostream>
-#include <experimental/generator>
 #include <random>
 
 #include <opencv2/core.hpp>
@@ -20,4 +18,10 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
+#ifdef IS_WINDOWS_PROJECT
+#include <tchar.h>
+
+#include <experimental/generator>
+
 #include "dirent.h"
+#endif

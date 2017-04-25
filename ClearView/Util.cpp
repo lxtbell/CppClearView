@@ -2,6 +2,8 @@
 #include "Util.h"
 
 using namespace std;
+
+#ifdef IS_WINDOWS_PROJECT
 using namespace std::experimental;
 
 generator<const string> Util::findFiles(const string &folder) {
@@ -19,6 +21,7 @@ generator<const string> Util::findFiles(const string &folder) {
 	}
 	closedir(dir);
 }
+#endif
 
 random_device Util::randomDevice;
 mt19937 Util::randomEngine(randomDevice());

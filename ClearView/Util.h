@@ -2,6 +2,7 @@
 #include "stdafx.h"
 
 struct Util {
+#ifdef IS_WINDOWS_PROJECT
 	/*!
 	 @brief Returns a generator for iterating over all files in a directory
 	 */
@@ -15,7 +16,8 @@ struct Util {
 		for (auto l = left.begin(), r = right.begin(); l != left.end() && r != right.end(); ++l, ++r)
 			co_yield { *l, *r };
 	}
-
+#endif
+	
 	/*!
 	 @brief Generate a random real number in [start, stop]
 	 */
