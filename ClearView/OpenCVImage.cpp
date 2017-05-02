@@ -21,7 +21,9 @@ cv::Mat OpenCVImage::getMat() const {
 void OpenCVImage::display(const string &windowTitle) const {
 	cv::namedWindow(windowTitle, cv::WINDOW_AUTOSIZE);
 	cv::imshow(windowTitle, mat);
+	cv::moveWindow(windowTitle, 0, 0);
 	cv::waitKey(0);
+	cv::destroyWindow(windowTitle);
 }
 
 int OpenCVImage::getHeight() const {

@@ -156,9 +156,12 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CameraProfile.h" />
     <ClInclude Include="dirent.h" />
     <ClInclude Include="ImageProcess.h" />
     <ClInclude Include="ImageTasks.h" />
+    <ClInclude Include="json\json-forwards.h" />
+    <ClInclude Include="json\json.h" />
     <ClInclude Include="OpenCVImage.h" />
     <ClInclude Include="OpenCVKernel.h" />
     <ClInclude Include="stdafx.h" />
@@ -167,9 +170,11 @@
     <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CameraProfile.cpp" />
     <ClCompile Include="ClearView.cpp" />
     <ClCompile Include="ImageProcess.cpp" />
     <ClCompile Include="ImageTasks.cpp" />
+    <ClCompile Include="jsoncpp.cpp" />
     <ClCompile Include="OpenCVImage.cpp" />
     <ClCompile Include="OpenCVKernel.cpp" />
     <ClCompile Include="stdafx.cpp">

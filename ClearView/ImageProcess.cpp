@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "Util.h"
 #include "ImageProcess.h"
+#include "Util.h"
 #include "OpenCVKernel.h"
 
 using namespace std;
@@ -17,7 +17,7 @@ namespace ImageProcess {
 			reflectionImage = ghostingKernel.applyTo(reflectionImage);
 		}
 
-		float beta = Util::randomFloat(0.2f, 0.4f);  // Pick a randopm weight of the reflection in the final image
+		float beta = Util::randomFloat(0.0f, 0.4f);  // Pick a randopm weight of the reflection in the final image
 		return transmissionImage.blend(reflectionImage, 1 - beta, beta, 0);
 	}
 
@@ -52,8 +52,20 @@ namespace ImageProcess {
 	OpenCVImage removeReflection(const OpenCVImage &transmission, const OpenCVImage &reflection) {
 		OpenCVImage reflectionImage(reflection);
 		OpenCVImage transmissionImage(transmission);
-		float beta = 0.3f;
-		return transmissionImage.deblend(reflectionImage, 1 - beta, beta, 0);
+
+		int imageSize = transmission.getHeight() * transmission.getWidth();
+		auto objective = [&](float beta) -> double {
+			OpenCVImage recoveredImage = transmissionImage.deblend(reflectionImage, 1, beta, 0);
+			return recoveredImage.getGradient().getNorm(cv::NORM_L1) / imageSize;
+		};
+		float beta = Util::optimize(objective, 0, MAX_REFLECTION_ALPHA);
+		OpenCVImage recoveredImage = transmissionImage.deblend(reflectionImage, 1 - beta, beta, 0);
+
+		//for (float b = 0; b < MAX_REFLECTION_ALPHA; b += 0.05) {
+		//	cout << objective(b) << endl;
+		//	transmissionImage.deblend(reflectionImage, 1, b, 0).display("b = " + to_string(b));
+		//}
+		return recoveredImage;
 	}
 
 	OpenCVImage removeReflection(const OpenCVImage &transmission) {

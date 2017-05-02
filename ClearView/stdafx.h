@@ -13,11 +13,15 @@
 #include <iostream>
 #include <random>
 #include <algorithm>
+#include <fstream>
+#include <functional>
 
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+
+#include "json/json.h"
 
 #ifdef IS_WINDOWS_PROJECT
 #include <tchar.h>

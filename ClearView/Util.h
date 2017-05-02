@@ -44,6 +44,17 @@ struct Util {
 		return max(lo, min(v, hi));
 	}
 
+	template <typename T>
+	static size_t argmin(const std::vector<T> &v) {
+		return std::distance(v.begin(), std::min_element(v.begin(), v.end()));
+	}
+
+	static Json::Value readJson(const std::string &path);
+
+	//static float optimize(std::function<double (float)> f, float x, float rate, float eps = 0.01, int iterations = 10);
+
+	static float optimize(std::function<double (float)> f, float xl, float xr, int iterations = 10);
+
 protected:
 	static std::random_device randomDevice;
 	static std::mt19937 randomEngine;

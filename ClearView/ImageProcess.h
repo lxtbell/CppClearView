@@ -4,6 +4,9 @@
 #include "OpenCVImage.h"
 
 namespace ImageProcess {
+	static const float AVG_REFLECTION_ALPHA = 0.2f;
+	static const float MAX_REFLECTION_ALPHA = 0.5f;
+
 	/*!
 	 @brief Synthesize an image with reflection based on a transmission image and a reflection image
 	 @param ghosting If a ghosting kernel to produce duplicated reflections is used
