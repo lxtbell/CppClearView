@@ -1,7 +1,8 @@
 #pragma once
 #include "stdafx.h"
+#include "TestExport.h"
 
-struct Util {
+struct UNITTEST_EXPORT Util {
 #ifdef IS_WINDOWS_PROJECT
 	/*!
 	 @brief Returns a generator for iterating over all files in a directory

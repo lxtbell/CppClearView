@@ -27,4 +27,6 @@ namespace ImageProcess {
 	@brief Remove the reflection from an image
 	*/
 	UNITTEST_EXPORT OpenCVImage removeReflection(const OpenCVImage &transmission);
+
+	UNITTEST_EXPORT OpenCVImage reflectionPreview(const std::string &profilePath, const OpenCVImage &transmission, const OpenCVImage &reflection, float mirrorDistance, float mirrorAngleX, float mirrorAngleY);
 }

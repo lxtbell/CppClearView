@@ -92,3 +92,10 @@ OpenCVImage OpenCVImage::deblend(const OpenCVImage &other, float alpha, float be
 	// result = current / alpha - beta / alpha * other - gamma / alpha
 	return blend(other, 1 / alpha, -beta / alpha, -gamma / alpha);
 }
+
+OpenCVImage OpenCVImage::changePerspective(const cv::Point2f *sourcePoints, const cv::Point2f *destPoints) const {
+	cv::Mat transform = cv::getPerspectiveTransform(sourcePoints, destPoints);
+	cv::Mat destImage;
+	cv::warpPerspective(mat, destImage, transform, cv::Size(mat.cols, mat.rows));
+	return destImage;
+}

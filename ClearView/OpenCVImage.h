@@ -82,6 +82,8 @@ struct UNITTEST_EXPORT OpenCVImage {
 	 */
 	OpenCVImage deblend(const OpenCVImage &other, float alpha, float beta, float gamma) const;
 
+	OpenCVImage changePerspective(const cv::Point2f *sourcePoints, const cv::Point2f *destPoints) const;
+
 protected:
 	friend struct OpenCVKernel;
     cv::Mat mat;

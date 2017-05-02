@@ -2,6 +2,7 @@
 #include "ImageProcess.h"
 #include "Util.h"
 #include "OpenCVKernel.h"
+#include "CameraProfile.h"
 
 using namespace std;
 
@@ -57,8 +58,9 @@ namespace ImageProcess {
 		auto objective = [&](float beta) -> double {
 			OpenCVImage recoveredImage = transmissionImage.deblend(reflectionImage, 1, beta, 0);
 			return recoveredImage.getGradient().getNorm(cv::NORM_L1) / imageSize;
-		};
-		float beta = Util::optimize(objective, 0, MAX_REFLECTION_ALPHA);
+		};  // Award sparse gradients to find "natural" images
+
+		float beta = Util::optimize(objective, 0, MAX_REFLECTION_ALPHA);  // Find the most likely beta
 		OpenCVImage recoveredImage = transmissionImage.deblend(reflectionImage, 1 - beta, beta, 0);
 
 		//for (float b = 0; b < MAX_REFLECTION_ALPHA; b += 0.05) {
@@ -69,6 +71,12 @@ namespace ImageProcess {
 	}
 
 	OpenCVImage removeReflection(const OpenCVImage &transmission) {
-		return transmission.blend(transmission, 0.5, 0, 0);
+		return transmission;
+	}
+
+	OpenCVImage reflectionPreview(const string &profilePath, const OpenCVImage &transmission, const OpenCVImage &reflection, float mirrorDistance, float mirrorAngleX, float mirrorAngleY) {
+		CameraProfile profile(profilePath);
+		OpenCVImage newReflection = profile.transformImage(reflection, mirrorDistance, mirrorAngleX, mirrorAngleY, CameraProfile::CameraType::FrontCamera);
+		return transmission.blend(newReflection, 0.5, 0.5, 0);
 	}
 }

@@ -63,6 +63,9 @@
     <ClInclude Include="json\json.h">
       <Filter>Header Files\Environment</Filter>
     </ClInclude>
+    <ClInclude Include="CameraProfile.h">
+      <Filter>Header Files\Library</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -88,6 +91,9 @@
     </ClCompile>
     <ClCompile Include="jsoncpp.cpp">
       <Filter>Source Files\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraProfile.cpp">
+      <Filter>Source Files\Library</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

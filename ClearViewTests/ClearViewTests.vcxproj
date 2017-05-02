@@ -159,6 +159,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CameraProfileTests.cpp" />
     <ClCompile Include="ClearViewTests.cpp" />
     <ClCompile Include="ImageProcessTests.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -168,6 +169,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="ImageTests.cpp" />
+    <ClCompile Include="UtilTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ClearView\ClearView.vcxproj">

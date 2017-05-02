@@ -1,5 +1,7 @@
 require 'nn'
-torch.setdefaulttensortype('torch.FloatTensor')
+require 'cunn'
+require 'ccn2'
+-- torch.setdefaulttensortype('torch.FloatTensor')
 
 -- If mean and stdv not given, normalize the data so that the mean is 0 and the standard deviation is 1
 -- Otherwise, shift and scale the data according to the given mean and standard deviation
@@ -46,12 +48,12 @@ function makeNetwork(params)
 
     -- Build the convolutional neural network
     local net = nn.Sequential()
-    net:add(nn.SpatialConvolution(3, params.outputA, params.kernelA, params.kernelA))                    -- 3 input image channels, 6 output channels, 21x21 convolution kernel
+    net:add(ccn2.SpatialConvolution(3, params.outputA, params.kernelA, params.kernelA))                    -- 3 input image channels, 6 output channels, 21x21 convolution kernel
     net:add(nn.ReLU())                                                                                   -- non-linearity 
-    net:add(nn.SpatialMaxPooling(params.maxPoolA, params.maxPoolA, params.maxPoolA, params.maxPoolA))    -- A max-pooling operation that looks at 3x3 windows and finds the max.
-    net:add(nn.SpatialConvolution(params.outputA, params.outputB, params.kernelB, params.kernelB))       -- 6 input image channels, 16 output channels, 21x21 convolution kernel
+    net:add(ccn2.SpatialMaxPooling(params.maxPoolA, params.maxPoolA, params.maxPoolA, params.maxPoolA))    -- A max-pooling operation that looks at 3x3 windows and finds the max.
+    net:add(ccn2.SpatialConvolution(params.outputA, params.outputB, params.kernelB, params.kernelB))       -- 6 input image channels, 16 output channels, 21x21 convolution kernel
     net:add(nn.ReLU())                                                                                   -- non-linearity 
-    net:add(nn.SpatialMaxPooling(params.maxPoolB, params.maxPoolB, params.maxPoolB, params.maxPoolB))    -- A max-pooling operation that looks at 4x4 windows and finds the max.
+    net:add(ccn2.SpatialMaxPooling(params.maxPoolB, params.maxPoolB, params.maxPoolB, params.maxPoolB))    -- A max-pooling operation that looks at 4x4 windows and finds the max.
     net:add(nn.View(params.outputB * outputBLength * outputBLength))                                     -- reshapes from a 3D tensor of 16x10x10 into 1D tensor of 16*10*10
     net:add(nn.Linear(params.outputB * outputBLength * outputBLength, params.fullyA))                    -- fully connected layer (matrix multiplication between input and weights)
     net:add(nn.ReLU())                                                                                   -- non-linearity 
@@ -60,7 +62,7 @@ function makeNetwork(params)
     net:add(nn.Linear(params.fullyB, params.finalOutput))                                                -- 2 is the number of outputs of the network
     net:add(nn.LogSoftMax())                                                                             -- converts the output to a log-probability. Useful for classification problems
 
-    return net
+    return net:cuda()
 end
 
 -- Build a LeNet convolutional neural network based on a set of parameters
@@ -105,8 +107,6 @@ function evaluate(testData, net)
     return correct / dataLength
 end
 
-
-
 -- Return the index of the maximum value in an array
 function argmax(vector)
     local maxValue = math.max(unpack(vector))
@@ -137,6 +137,10 @@ end
 function main()
 	local trainset = torch.load('data/tensors/binaryTrain.t7')
 	local testset = torch.load('data/tensors/binaryTest.t7')
+
+    -- Convert the training data to cuda
+    trainset.data = trainset.data:cuda()
+    testset.data = testset.data:cuda()
 
 	-- Normalize the training data
 	local mean, stdv = normalize(trainset.data)

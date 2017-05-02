@@ -24,6 +24,6 @@ public:
 		//	image.display("Forged Reflection Series");
 
 		OpenCVImage recovered = ImageProcess::removeReflection(merged, reflection);
-		//recovered.display("Forged Reflection");
+		//recovered.display("Recovered");
 	}
 };
