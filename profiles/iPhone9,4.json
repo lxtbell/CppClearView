@@ -1,0 +1,16 @@
+{
+	"device": "iPhone 7 Plus",
+	"cameras": [
+		{
+			"type": "main",
+			"sensor": [5.16, 6.25],
+			"focal": 28
+		},
+		{
+			"type": "front",
+			"location": [0, 0, 0],
+			"sensor": [3.72, 5.05],
+			"focal": 32
+		}
+	]
+}
